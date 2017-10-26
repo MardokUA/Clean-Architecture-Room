@@ -3,6 +3,8 @@ package com.example.developer.roomexample.userlist.domain.model;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import java.util.UUID;
+
 public class User {
 
     @Expose
@@ -17,6 +19,8 @@ public class User {
     @Expose
     @SerializedName("phone")
     private String mPhone;
+
+    private String mId;
 
     public User() {
     }
@@ -51,5 +55,12 @@ public class User {
 
     public void setPhone(String mPhone) {
         this.mPhone = mPhone;
+    }
+
+    public String getId() {
+        if (mId == null) {
+            mId = UUID.randomUUID().toString();
+        }
+        return mId;
     }
 }
