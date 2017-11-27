@@ -1,4 +1,4 @@
-package com.example.developer.roomexample.userlist.domain.model;
+package com.example.developer.roomexample.data.source.model;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;

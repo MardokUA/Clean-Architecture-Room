@@ -1,27 +1,23 @@
 package com.example.developer.roomexample;
 
+import com.example.developer.roomexample.data.source.model.Error;
 
-public abstract class UseCase<Q extends UseCase.RequestValues, K extends UseCase.ResponseValues> {
+public interface UseCase<Q extends UseCase.RequestValues, K extends UseCase.ResponseValues> {
 
-    private Q mRequestValues;
-    private UseCaseCallback<K> mUseCaseCallback;
+    void execute(Q values, UseCaseCallback<K> callback);
 
-    public void setRequestValues(Q requestValues) {
-        this.mRequestValues = requestValues;
-    }
-
-    public interface RequestValues {
+    interface RequestValues {
 
     }
 
-    public interface ResponseValues {
+    interface ResponseValues {
 
     }
 
-    public interface UseCaseCallback<R> {
+    interface UseCaseCallback<R> {
 
         void onSuccess(R response);
 
-        void onError();
+        void onError(Error error);
     }
 }

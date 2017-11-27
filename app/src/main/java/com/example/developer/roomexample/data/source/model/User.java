@@ -1,4 +1,4 @@
-package com.example.developer.roomexample.userlist.domain.model;
+package com.example.developer.roomexample.data.source.model;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
@@ -7,6 +7,8 @@ import java.util.UUID;
 
 public class User {
 
+    private String mId;
+
     @Expose
     @SerializedName("gender")
     private String mGender;
@@ -14,13 +16,14 @@ public class User {
     @SerializedName("name")
     private UserName mUserName;
     @Expose
+    @SerializedName("login")
+    private UserLogin mUserLogin;
+    @Expose
     @SerializedName("email")
     private String mEmail;
     @Expose
     @SerializedName("phone")
     private String mPhone;
-
-    private String mId;
 
     public User() {
     }
@@ -55,6 +58,14 @@ public class User {
 
     public void setPhone(String mPhone) {
         this.mPhone = mPhone;
+    }
+
+    public UserLogin getUserLogin() {
+        return mUserLogin;
+    }
+
+    public void setUserLogin(UserLogin mUserLogin) {
+        this.mUserLogin = mUserLogin;
     }
 
     public String getId() {

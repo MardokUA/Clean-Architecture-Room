@@ -34,7 +34,7 @@ public class ApiFactory {
                 .build();
     }
 
-    private Retrofit getApi() {
+    public Retrofit getRetrofit() {
         return mRetrofit;
     }
 }
