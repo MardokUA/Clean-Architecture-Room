@@ -15,7 +15,7 @@ public class UserName {
     public UserName() {
     }
 
-    public String getmFirstName() {
+    public String getFirstName() {
         return mFirstName;
     }
 

@@ -7,12 +7,15 @@ import com.example.developer.roomexample.data.source.UserDataSource;
 import com.example.developer.roomexample.data.source.UserRepository;
 import com.example.developer.roomexample.data.source.model.Error;
 import com.example.developer.roomexample.data.source.model.User;
+import com.example.developer.roomexample.userlist.domain.model.UserContact;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class GetUserList implements UseCase<GetUserList.RequestValues, GetUserList.ResponseValues> {
 
     private UserRepository mUserRepository;
+    private final String mUnrecognized = "unrecognized";
 
     public GetUserList() {
         mUserRepository = UserRepository.getInstance();
@@ -26,8 +29,9 @@ public class GetUserList implements UseCase<GetUserList.RequestValues, GetUserLi
         mUserRepository.getUserList(resultCount, params, new UserDataSource.SourceCallback() {
             @Override
             public void onSuccess(List<User> userList) {
-                ResponseValues responseValues = new ResponseValues(userList);
-                callback.onSuccess(responseValues);
+                List<UserContact> userContacts = generateUserContactList(userList);
+                GetUserList.ResponseValues response = new GetUserList.ResponseValues(userContacts);
+                callback.onSuccess(response);
             }
 
             @Override
@@ -35,6 +39,28 @@ public class GetUserList implements UseCase<GetUserList.RequestValues, GetUserLi
                 callback.onError(error);
             }
         });
+    }
+
+    private List<UserContact> generateUserContactList(List<User> userResponseList) {
+        List<UserContact> userContacts = new ArrayList<>(20);
+        for (User user : userResponseList) {
+            String firstName = obtainUserFieldData(user.getUserName().getFirstName());
+            String lastName = obtainUserFieldData(user.getUserName().getLastName());
+
+            UserContact userContact = new UserContact(firstName, lastName);
+            userContact.setEmail(obtainUserFieldData(user.getEmail()));
+            userContact.setGender(obtainUserFieldData(user.getGender()));
+            userContact.setPhone(obtainUserFieldData(user.getPhone()));
+            userContact.setLogin(obtainUserFieldData(user.getUserLogin().getUserName()));
+            userContact.setPassword(obtainUserFieldData(user.getUserLogin().getUserPassword()));
+            userContact.setSha1(obtainUserFieldData(user.getUserLogin().getSha1()));
+            userContacts.add(userContact);
+        }
+        return userContacts;
+    }
+
+    private String obtainUserFieldData(String param) {
+        return param == null ? mUnrecognized : param;
     }
 
     public static class RequestValues implements UseCase.RequestValues {
@@ -57,14 +83,18 @@ public class GetUserList implements UseCase<GetUserList.RequestValues, GetUserLi
 
     public static class ResponseValues implements UseCase.ResponseValues {
 
-        private final List<User> mResponseList;
+        private final List<UserContact> mResponseList;
 
-        public ResponseValues(List<User> mResponseList) {
+        public ResponseValues(List<UserContact> mResponseList) {
             this.mResponseList = mResponseList;
         }
 
-        public List<User> getResponseList() {
+        public List<UserContact> getResponseList() {
             return mResponseList;
+        }
+
+        public String getUserListCount() {
+            return String.valueOf(mResponseList.size());
         }
     }
 }

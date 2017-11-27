@@ -18,7 +18,7 @@ public class UserLogin {
     public UserLogin() {
     }
 
-    public String getmUserName() {
+    public String getUserName() {
         return mUserName;
     }
 
@@ -26,7 +26,7 @@ public class UserLogin {
         this.mUserName = mUserName;
     }
 
-    public String getmUserPassword() {
+    public String getUserPassword() {
         return mUserPassword;
     }
 
@@ -34,7 +34,7 @@ public class UserLogin {
         this.mUserPassword = mUserPassword;
     }
 
-    public String getmSha1() {
+    public String getSha1() {
         return mSha1;
     }
 
