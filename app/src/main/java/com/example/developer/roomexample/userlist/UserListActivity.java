@@ -3,13 +3,16 @@ package com.example.developer.roomexample.userlist;
 import android.os.Bundle;
 import android.support.annotation.StringRes;
 import android.support.design.widget.Snackbar;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.view.View;
+import android.widget.ProgressBar;
 
 import com.example.developer.roomexample.R;
-import com.example.developer.roomexample.data.source.model.User;
+import com.example.developer.roomexample.application.RoomExample;
 import com.example.developer.roomexample.userlist.domain.model.UserContact;
 
 import java.util.List;
@@ -18,18 +21,35 @@ public class UserListActivity extends AppCompatActivity implements UserListContr
 
     private UserListPresenterImp mPresenter;
     private UserListAdapter mAdapter;
+    private SwipeRefreshLayout mRefreshLayout;
+    private ProgressBar mProgressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_users);
+        if (RoomExample.isKitkat()) {
+            setTheme(R.style.ActivityKitKatTheme);
+        }
+        initViewContent();
+        initAdapter();
+        initPresenter();
+    }
 
+    private void initViewContent() {
         Toolbar toolbar = findViewById(R.id.users_toolbar);
         if (getSupportActionBar() != null) {
             setSupportActionBar(toolbar);
         }
-        initAdapter();
-        initPresenter();
+        mProgressBar = findViewById(R.id.users_progress_bar);
+        mRefreshLayout = findViewById(R.id.users_swipe_refresh);
+        mRefreshLayout.setColorSchemeColors(getResources().getColor(R.color.colorAccent));
+        mRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                mPresenter.onRefresh();
+            }
+        });
     }
 
     private void initAdapter() {
@@ -47,6 +67,7 @@ public class UserListActivity extends AppCompatActivity implements UserListContr
 
     @Override
     public void showUserList(List<UserContact> userList) {
+        mProgressBar.setVisibility(View.GONE);
         mAdapter.updateUserList(userList);
     }
 
@@ -56,8 +77,9 @@ public class UserListActivity extends AppCompatActivity implements UserListContr
     }
 
     @Override
-    public void updateUserList(List<User> userList) {
-
+    public void updateUserList(List<UserContact> userList) {
+        mRefreshLayout.setRefreshing(false);
+        mAdapter.updateUserList(userList);
     }
 
     @Override
@@ -73,4 +95,5 @@ public class UserListActivity extends AppCompatActivity implements UserListContr
     private void showSnack(String message) {
         Snackbar.make(findViewById(R.id.users_container), message, Snackbar.LENGTH_SHORT).show();
     }
+
 }

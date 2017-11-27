@@ -42,7 +42,7 @@ public class GetUserList implements UseCase<GetUserList.RequestValues, GetUserLi
     }
 
     private List<UserContact> generateUserContactList(List<User> userResponseList) {
-        List<UserContact> userContacts = new ArrayList<>(20);
+        List<UserContact> userContacts = new ArrayList<>(25);
         for (User user : userResponseList) {
             String firstName = obtainUserFieldData(user.getUserName().getFirstName());
             String lastName = obtainUserFieldData(user.getUserName().getLastName());
@@ -72,11 +72,11 @@ public class GetUserList implements UseCase<GetUserList.RequestValues, GetUserLi
             this.mResultCount = mResult;
         }
 
-        public String getParams() {
+        String getParams() {
             return mParams;
         }
 
-        public Integer getResultCount() {
+        Integer getResultCount() {
             return mResultCount;
         }
     }
@@ -85,7 +85,7 @@ public class GetUserList implements UseCase<GetUserList.RequestValues, GetUserLi
 
         private final List<UserContact> mResponseList;
 
-        public ResponseValues(List<UserContact> mResponseList) {
+        ResponseValues(List<UserContact> mResponseList) {
             this.mResponseList = mResponseList;
         }
 

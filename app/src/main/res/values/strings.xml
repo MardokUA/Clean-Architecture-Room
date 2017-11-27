@@ -8,5 +8,6 @@
     <string name="user_gender_title">Gender</string>
     <string name="user_password_title">Password:</string>
     <string name="user_sha1_title">SHA1:</string>
-    <string name="user_list_count">User count: </string>
+    <string name="snack_user_list_updated">List is updated. User count: </string>
+
 </resources>

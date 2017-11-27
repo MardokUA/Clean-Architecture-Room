@@ -14,6 +14,8 @@ public interface UserListContract {
     interface Presenter extends BasePresenter {
 
         void getUserList();
+
+        void onRefresh();
     }
 
     interface View extends BaseView {
@@ -22,7 +24,6 @@ public interface UserListContract {
 
         void showUserListSnack(@StringRes int messageId, String count);
 
-        void updateUserList(List<User> userList);
-
+        void updateUserList(List<UserContact> userList);
     }
 }

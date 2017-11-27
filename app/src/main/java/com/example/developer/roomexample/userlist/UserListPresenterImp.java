@@ -8,22 +8,20 @@ import com.example.developer.roomexample.userlist.domain.usecase.GetUserList;
 public class UserListPresenterImp implements UserListContract.Presenter {
 
     private UserListContract.View mView;
-    private GetUserList mUseCase;
+    private boolean mIsRefresh;
 
-    public UserListPresenterImp(UserListContract.View view) {
+    UserListPresenterImp(UserListContract.View view) {
         mView = view;
-        mUseCase = new GetUserList();
     }
 
     @Override
     public void getUserList() {
-        final GetUserList.RequestValues requestValues = new GetUserList.RequestValues(25);
-        mUseCase.execute(requestValues, new UseCase.UseCaseCallback<GetUserList.ResponseValues>() {
+        GetUserList getUserListUseCase = new GetUserList();
+        getUserListUseCase.execute(new GetUserList.RequestValues(25), new UseCase.UseCaseCallback<GetUserList.ResponseValues>() {
             @Override
             public void onSuccess(GetUserList.ResponseValues response) {
                 if (mView != null) {
-                    mView.showUserList(response.getResponseList());
-                    mView.showUserListSnack(R.string.user_list_count, response.getUserListCount());
+                    proceedUserListResponse(response);
                 }
             }
 
@@ -34,6 +32,22 @@ public class UserListPresenterImp implements UserListContract.Presenter {
                 }
             }
         });
+    }
+
+    private void proceedUserListResponse(GetUserList.ResponseValues response) {
+        if (mIsRefresh) {
+            mView.updateUserList(response.getResponseList());
+            mView.showUserListSnack(R.string.snack_user_list_updated, response.getUserListCount());
+            mIsRefresh = false;
+        } else {
+            mView.showUserList(response.getResponseList());
+        }
+    }
+
+    @Override
+    public void onRefresh() {
+        mIsRefresh = true;
+        getUserList();
     }
 
     @Override
