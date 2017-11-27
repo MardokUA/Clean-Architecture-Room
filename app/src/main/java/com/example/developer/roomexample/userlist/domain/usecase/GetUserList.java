@@ -48,6 +48,7 @@ public class GetUserList implements UseCase<GetUserList.RequestValues, GetUserLi
             String lastName = obtainUserFieldData(user.getUserName().getLastName());
 
             UserContact userContact = new UserContact(firstName, lastName);
+            userContact.setId(user.getId());
             userContact.setEmail(obtainUserFieldData(user.getEmail()));
             userContact.setGender(obtainUserFieldData(user.getGender()));
             userContact.setPhone(obtainUserFieldData(user.getPhone()));
