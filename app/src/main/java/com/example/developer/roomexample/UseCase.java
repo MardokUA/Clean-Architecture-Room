@@ -1,6 +1,6 @@
 package com.example.developer.roomexample;
 
-import com.example.developer.roomexample.data.source.model.Error;
+import com.example.developer.roomexample.data.source.remote.model.Error;
 
 public interface UseCase<Q extends UseCase.RequestValues, K extends UseCase.ResponseValues> {
 

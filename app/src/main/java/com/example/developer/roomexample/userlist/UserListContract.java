@@ -4,8 +4,7 @@ import android.support.annotation.StringRes;
 
 import com.example.developer.roomexample.BasePresenter;
 import com.example.developer.roomexample.BaseView;
-import com.example.developer.roomexample.data.source.model.User;
-import com.example.developer.roomexample.userlist.domain.model.UserContact;
+import com.example.developer.roomexample.data.source.local.entity.UserContact;
 
 import java.util.List;
 

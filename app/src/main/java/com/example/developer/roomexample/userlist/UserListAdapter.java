@@ -8,7 +8,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.example.developer.roomexample.R;
-import com.example.developer.roomexample.userlist.domain.model.UserContact;
+import com.example.developer.roomexample.data.source.local.entity.UserContact;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -2,22 +2,23 @@ package com.example.developer.roomexample.userlist;
 
 import com.example.developer.roomexample.R;
 import com.example.developer.roomexample.UseCase;
-import com.example.developer.roomexample.data.source.model.Error;
+import com.example.developer.roomexample.data.source.remote.model.Error;
 import com.example.developer.roomexample.userlist.domain.usecase.GetUserList;
 
 public class UserListPresenterImp implements UserListContract.Presenter {
 
     private UserListContract.View mView;
+    private GetUserList mGetUserList;
     private boolean mIsRefresh;
 
     UserListPresenterImp(UserListContract.View view) {
         mView = view;
+        mGetUserList = new GetUserList();
     }
 
     @Override
     public void getUserList() {
-        GetUserList getUserListUseCase = new GetUserList();
-        getUserListUseCase.execute(new GetUserList.RequestValues(25), new UseCase.UseCaseCallback<GetUserList.ResponseValues>() {
+        mGetUserList.execute(new GetUserList.RequestValues(25), new UseCase.UseCaseCallback<GetUserList.ResponseValues>() {
             @Override
             public void onSuccess(GetUserList.ResponseValues response) {
                 if (mView != null) {

@@ -1,6 +1,6 @@
 package com.example.developer.roomexample.data.source.remote;
 
-import com.example.developer.roomexample.data.source.model.RequestResponse;
+import com.example.developer.roomexample.data.source.remote.model.RequestResponse;
 
 import retrofit2.Call;
 import retrofit2.http.GET;

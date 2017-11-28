@@ -1,12 +1,13 @@
-package com.example.developer.roomexample.userlist.domain.model;
+package com.example.developer.roomexample.data.source.local.entity;
 
 import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.PrimaryKey;
+import android.support.annotation.NonNull;
 
-@Entity
+@Entity (tableName = "users")
 public class UserContact {
-    @PrimaryKey
+    @PrimaryKey @NonNull
     private String mId;
     @ColumnInfo(name = "name")
     private String mUserWholeName;
@@ -22,6 +23,9 @@ public class UserContact {
     private String mGender;
     @ColumnInfo(name = "sha1")
     private String mSha1;
+
+    public UserContact() {
+    }
 
     public UserContact(String firstName, String lastName) {
         String firstNameBigLetter = firstName.substring(0, 1).toUpperCase();
@@ -41,8 +45,8 @@ public class UserContact {
         return mUserWholeName;
     }
 
-    public void setUserWholeName(String mUserWholeNahe) {
-        this.mUserWholeName = mUserWholeNahe;
+    public void setUserWholeName(String mUserWholeName) {
+        this.mUserWholeName = mUserWholeName;
     }
 
     public String getLogin() {

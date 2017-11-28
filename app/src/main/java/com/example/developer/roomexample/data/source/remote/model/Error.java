@@ -1,4 +1,4 @@
-package com.example.developer.roomexample.data.source.model;
+package com.example.developer.roomexample.data.source.remote.model;
 
 public class Error {
 

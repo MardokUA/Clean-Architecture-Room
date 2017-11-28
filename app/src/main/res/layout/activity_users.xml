@@ -14,7 +14,7 @@
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
         android:orientation="vertical"
-        app:elevation="4dp"
+        app:elevation="10dp"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
@@ -49,8 +49,7 @@
             android:id="@+id/users_list"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:overScrollMode="always"
-            android:padding="16dp" />
+            android:overScrollMode="always"/>
 
     </android.support.v4.widget.SwipeRefreshLayout>
 </android.support.constraint.ConstraintLayout>

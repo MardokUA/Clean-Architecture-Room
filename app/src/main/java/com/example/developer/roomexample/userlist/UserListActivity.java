@@ -13,7 +13,7 @@ import android.widget.ProgressBar;
 
 import com.example.developer.roomexample.R;
 import com.example.developer.roomexample.application.RoomExample;
-import com.example.developer.roomexample.userlist.domain.model.UserContact;
+import com.example.developer.roomexample.data.source.local.entity.UserContact;
 
 import java.util.List;
 
