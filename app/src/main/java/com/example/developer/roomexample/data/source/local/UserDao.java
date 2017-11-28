@@ -9,6 +9,8 @@ import com.example.developer.roomexample.data.source.local.entity.UserContact;
 
 import java.util.List;
 
+import retrofit2.http.DELETE;
+
 @Dao
 public interface UserDao {
 
@@ -17,6 +19,9 @@ public interface UserDao {
 
     @Delete
     void deleteContact(UserContact userContact);
+
+    @Delete
+    void deleteAllContacts(UserContact...userContacts);
 
     @Query("SELECT * FROM users")
     List<UserContact> getAllUsers();

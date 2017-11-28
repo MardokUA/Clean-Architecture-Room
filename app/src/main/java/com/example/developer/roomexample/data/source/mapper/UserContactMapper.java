@@ -1,4 +1,4 @@
-package com.example.developer.roomexample.data.source.local.mapper;
+package com.example.developer.roomexample.data.source.mapper;
 
 import com.example.developer.roomexample.data.source.local.entity.UserContact;
 import com.example.developer.roomexample.data.source.remote.model.User;

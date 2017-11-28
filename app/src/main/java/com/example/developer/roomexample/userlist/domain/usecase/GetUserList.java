@@ -6,7 +6,7 @@ import com.example.developer.roomexample.UseCase;
 import com.example.developer.roomexample.data.source.UserDataSource;
 import com.example.developer.roomexample.data.source.UserRepository;
 import com.example.developer.roomexample.data.source.local.entity.UserContact;
-import com.example.developer.roomexample.data.source.local.mapper.UserContactMapper;
+import com.example.developer.roomexample.data.source.mapper.UserContactMapper;
 import com.example.developer.roomexample.data.source.remote.model.Error;
 import com.example.developer.roomexample.data.source.remote.model.User;
 
@@ -25,12 +25,10 @@ public class GetUserList implements UseCase<GetUserList.RequestValues, GetUserLi
         String resultCount = String.valueOf(values.getResultCount());
         String params = values.getParams();
 
-        mUserRepository.getUserList(resultCount, params, new UserDataSource.SourceCallback() {
+        mUserRepository.getUserList(resultCount, params, new UserDataSource.BaseSourceCallback() {
             @Override
-            public void onSuccess(List<User> userList) {
-                UserContactMapper mapper = new UserContactMapper(userList);
-                List<UserContact> userContacts = mapper.transmorph();
-                GetUserList.ResponseValues response = new GetUserList.ResponseValues(userContacts);
+            public void onSuccess(List<UserContact> userList) {
+                GetUserList.ResponseValues response = new GetUserList.ResponseValues(userList);
                 callback.onSuccess(response);
             }
 

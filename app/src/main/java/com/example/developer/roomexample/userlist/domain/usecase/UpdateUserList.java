@@ -1,9 +1,13 @@
 package com.example.developer.roomexample.userlist.domain.usecase;
 
-import com.example.developer.roomexample.UseCase;
+import com.example.developer.roomexample.data.source.UserDataSource;
 import com.example.developer.roomexample.data.source.UserRepository;
+import com.example.developer.roomexample.data.source.local.entity.UserContact;
+import com.example.developer.roomexample.data.source.remote.model.Error;
 
-public class UpdateUserList implements UseCase<UpdateUserList.RequestValues, UpdateUserList.ResponseValues> {
+import java.util.List;
+
+public class UpdateUserList extends GetUserList {
 
     private UserRepository mUserRepository;
 
@@ -12,15 +16,20 @@ public class UpdateUserList implements UseCase<UpdateUserList.RequestValues, Upd
     }
 
     @Override
-    public void execute(RequestValues values, UseCaseCallback<ResponseValues> callback) {
+    public void execute(RequestValues values, final UseCaseCallback<ResponseValues> callback) {
+        String resultCount = String.valueOf(values.getResultCount());
+        String params = values.getParams();
+        mUserRepository.updateUserList(resultCount, params, new UserDataSource.BaseSourceCallback() {
+            @Override
+            public void onSuccess(List<UserContact> userList) {
+                GetUserList.ResponseValues response = new GetUserList.ResponseValues(userList);
+                callback.onSuccess(response);
+            }
 
-    }
-
-    public static class RequestValues implements UseCase.RequestValues {
-
-    }
-
-    public static class ResponseValues implements UseCase.ResponseValues {
-
+            @Override
+            public void onError(Error error) {
+                callback.onError(error);
+            }
+        });
     }
 }

@@ -1,25 +1,18 @@
 package com.example.developer.roomexample.data.source;
 
 import com.example.developer.roomexample.data.source.local.LocalDataSource;
+import com.example.developer.roomexample.data.source.local.entity.UserContact;
 import com.example.developer.roomexample.data.source.remote.RemoteDataSource;
 import com.example.developer.roomexample.data.source.remote.model.Error;
-import com.example.developer.roomexample.data.source.remote.model.RequestResponse;
-import com.example.developer.roomexample.data.source.remote.model.User;
-import com.example.developer.roomexample.data.source.remote.ApiFactory;
-import com.example.developer.roomexample.data.source.remote.UserApi;
 
 import java.util.List;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 public class UserRepository implements UserDataSource {
 
     private static UserRepository instance;
+
     private LocalDataSource mLocalDataSource;
     private RemoteDataSource mRemoteDataSource;
-    private UserApi mUserApi;
 
     public static UserRepository getInstance() {
         if (instance == null) {
@@ -29,28 +22,69 @@ public class UserRepository implements UserDataSource {
     }
 
     private UserRepository() {
-        mUserApi = ApiFactory.getInstance().getRetrofit().create(UserApi.class);
         mLocalDataSource = LocalDataSource.getInstance();
         mRemoteDataSource = RemoteDataSource.getInstance();
     }
 
     @Override
-    public void getUserList(String resultCount, String params, final SourceCallback callback) {
-        mUserApi.getUserList(resultCount, params).enqueue(new Callback<RequestResponse>() {
+    public void getUserList(final String resultCount, final String params, final BaseSourceCallback callback) {
+        mLocalDataSource.getUserList(resultCount, params, new BaseSourceCallback() {
             @Override
-            public void onResponse(Call<RequestResponse> call, Response<RequestResponse> response) {
-                if (response.body() == null) {
-                    callback.onError(new Error(Error.SERVER_ERROR));
-                    return;
-                }
-                List<User> responseList = response.body().getUserList();
-                callback.onSuccess(responseList);
+            public void onSuccess(List<UserContact> userList) {
+                callback.onSuccess(userList);
             }
 
             @Override
-            public void onFailure(Call<RequestResponse> call, Throwable t) {
-                callback.onError(new Error(Error.CONNECTION_ERROR));
+            public void onError(Error error) {
+                mRemoteDataSource.getUserList(resultCount, params, new BaseSourceCallback() {
+                    @Override
+                    public void onSuccess(List<UserContact> userList) {
+                        mLocalDataSource.addAllUsersContacts(callback, userList.toArray(new UserContact[userList.size()]));
+                        callback.onSuccess(userList);
+                    }
+
+                    @Override
+                    public void onError(Error error) {
+                        callback.onError(error);
+                    }
+                });
             }
         });
+    }
+
+    @Override
+    public void updateUserList(final String resultCount, final String params, final BaseSourceCallback callback) {
+        mLocalDataSource.updateUserList(resultCount, params, new BaseSourceCallback() {
+            @Override
+            public void onSuccess(List<UserContact> userList) {
+                mRemoteDataSource.getUserList(resultCount, params, new BaseSourceCallback() {
+                    @Override
+                    public void onSuccess(List<UserContact> userList) {
+                        mLocalDataSource.addAllUsersContacts(callback, userList.toArray(new UserContact[userList.size()]));
+                        callback.onSuccess(userList);
+                    }
+
+                    @Override
+                    public void onError(Error error) {
+                        callback.onError(error);
+                    }
+                });
+            }
+
+            @Override
+            public void onError(Error error) {
+
+            }
+        });
+    }
+
+    @Override
+    public void addUserContact(UserContact userContact, BaseSourceCallback callback) {
+        mLocalDataSource.addUserContact(userContact, callback);
+    }
+
+    @Override
+    public void addAllUsersContacts(BaseSourceCallback callback, UserContact... userContacts) {
+
     }
 }
