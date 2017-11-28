@@ -17,8 +17,6 @@ public class LocalDataSource implements UserDataSource {
     private static LocalDataSource sInstance;
     private UserLocalDataBase mDataBase;
 
-    private List<UserContact> mCachedUserContacts;
-
     public static LocalDataSource getInstance() {
         if (sInstance == null) {
             sInstance = new LocalDataSource();
@@ -28,7 +26,6 @@ public class LocalDataSource implements UserDataSource {
 
     private LocalDataSource() {
         mDataBase = Room.databaseBuilder(RoomExample.getContext(), UserLocalDataBase.class, DB_NAME).build();
-        mCachedUserContacts = new ArrayList<>(25);
     }
 
     @Override
@@ -36,12 +33,11 @@ public class LocalDataSource implements UserDataSource {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                mCachedUserContacts.clear();
-                mCachedUserContacts = mDataBase.getUserDao().getAllUsers();
-                if (mCachedUserContacts == null || mCachedUserContacts.isEmpty()) {
+                List<UserContact> userContactList = mDataBase.getUserDao().getAllUsers();
+                if (userContactList == null || userContactList.isEmpty()) {
                     callback.onError(new Error(Error.LOCAL_STORAGE_EMPTY_ERROR));
                 } else {
-                    callback.onSuccess(mCachedUserContacts);
+                    callback.onSuccess(userContactList);
                 }
             }
         }).start();
@@ -52,7 +48,7 @@ public class LocalDataSource implements UserDataSource {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                mDataBase.getUserDao().deleteAllContacts(mCachedUserContacts.toArray(new UserContact[mCachedUserContacts.size()]));
+                mDataBase.getUserDao().deleteAllContacts();
                 callback.onSuccess(null);
             }
         }).start();
