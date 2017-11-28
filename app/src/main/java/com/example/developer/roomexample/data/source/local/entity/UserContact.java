@@ -5,9 +5,10 @@ import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.PrimaryKey;
 import android.support.annotation.NonNull;
 
-@Entity (tableName = "users")
+@Entity(tableName = "users")
 public class UserContact {
-    @PrimaryKey @NonNull
+    @PrimaryKey
+    @NonNull
     private String mId;
     @ColumnInfo(name = "name")
     private String mUserWholeName;
@@ -96,4 +97,5 @@ public class UserContact {
     public void setSha1(String mSha1) {
         this.mSha1 = mSha1;
     }
+
 }

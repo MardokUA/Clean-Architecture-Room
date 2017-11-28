@@ -5,17 +5,16 @@ import android.support.annotation.NonNull;
 import com.example.developer.roomexample.UseCase;
 import com.example.developer.roomexample.data.source.UserDataSource;
 import com.example.developer.roomexample.data.source.UserRepository;
+import com.example.developer.roomexample.data.source.local.entity.UserContact;
+import com.example.developer.roomexample.data.source.local.mapper.UserContactMapper;
 import com.example.developer.roomexample.data.source.remote.model.Error;
 import com.example.developer.roomexample.data.source.remote.model.User;
-import com.example.developer.roomexample.data.source.local.entity.UserContact;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class GetUserList implements UseCase<GetUserList.RequestValues, GetUserList.ResponseValues> {
 
     private UserRepository mUserRepository;
-    private final String mUnrecognized = "unrecognized";
 
     public GetUserList() {
         mUserRepository = UserRepository.getInstance();
@@ -29,7 +28,8 @@ public class GetUserList implements UseCase<GetUserList.RequestValues, GetUserLi
         mUserRepository.getUserList(resultCount, params, new UserDataSource.SourceCallback() {
             @Override
             public void onSuccess(List<User> userList) {
-                List<UserContact> userContacts = generateUserContactList(userList);
+                UserContactMapper mapper = new UserContactMapper(userList);
+                List<UserContact> userContacts = mapper.transmorph();
                 GetUserList.ResponseValues response = new GetUserList.ResponseValues(userContacts);
                 callback.onSuccess(response);
             }
@@ -39,29 +39,6 @@ public class GetUserList implements UseCase<GetUserList.RequestValues, GetUserLi
                 callback.onError(error);
             }
         });
-    }
-
-    private List<UserContact> generateUserContactList(List<User> userResponseList) {
-        List<UserContact> userContacts = new ArrayList<>(25);
-        for (User user : userResponseList) {
-            String firstName = obtainUserFieldData(user.getUserName().getFirstName());
-            String lastName = obtainUserFieldData(user.getUserName().getLastName());
-
-            UserContact userContact = new UserContact(firstName, lastName);
-            userContact.setId(user.getId());
-            userContact.setEmail(obtainUserFieldData(user.getEmail()));
-            userContact.setGender(obtainUserFieldData(user.getGender()));
-            userContact.setPhone(obtainUserFieldData(user.getPhone()));
-            userContact.setLogin(obtainUserFieldData(user.getUserLogin().getUserName()));
-            userContact.setPassword(obtainUserFieldData(user.getUserLogin().getUserPassword()));
-            userContact.setSha1(obtainUserFieldData(user.getUserLogin().getSha1()));
-            userContacts.add(userContact);
-        }
-        return userContacts;
-    }
-
-    private String obtainUserFieldData(String param) {
-        return param == null ? mUnrecognized : param;
     }
 
     public static class RequestValues implements UseCase.RequestValues {
