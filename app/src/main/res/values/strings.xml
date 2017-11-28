@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">RoomExample</string>
+    <string name="app_name">User Finder</string>
     <!--User list-->
     <string name="activity_list_title">User\'s list</string>
     <string name="user_email_title">Email:</string>
